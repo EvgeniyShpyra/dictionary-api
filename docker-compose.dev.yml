@@ -16,6 +16,7 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: password
+      DB_NAME: dictionary
   db:
     image: postgres:15.1-alpine3.16
     restart: unless-stopped
