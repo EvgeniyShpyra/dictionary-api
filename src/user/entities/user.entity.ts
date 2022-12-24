@@ -6,8 +6,12 @@ export class User {
   id: number;
   @Column('text')
   username: string;
-  @Column('text')
+  @Column('text', { unique: true })
   email: string;
+  @Column('text')
+  password: string;
   @Column('boolean', { default: false })
   isConfirmed: boolean;
+  @Column({ nullable: true, default: Date.now(), name: 'created_at' })
+  createdAt?: string;
 }
