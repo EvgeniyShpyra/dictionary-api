@@ -9,6 +9,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
+#      POSTGRES_DB: dictionary
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
