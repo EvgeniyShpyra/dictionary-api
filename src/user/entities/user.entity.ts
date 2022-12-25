@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Dictionary } from '../../dictionary/entity/dictionary.entity';
 
 @Entity()
 export class User {
@@ -14,4 +15,8 @@ export class User {
   isConfirmed: boolean;
   @Column({ nullable: true, default: Date.now(), name: 'created_at' })
   createdAt?: string;
+  @OneToMany(() => Dictionary, (dictionary) => dictionary.user, {
+    cascade: true,
+  })
+  dictionaries: Dictionary[];
 }

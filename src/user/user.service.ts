@@ -10,6 +10,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/user.dto';
 import { compare } from 'bcryptjs';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
+import {
+  USER_ALREADY_EXISTS_ERROR,
+  USER_NOT_EXIST_ERROR,
+} from '../auth/constants/auth.constants';
 
 @Injectable()
 export class UserService {
@@ -22,7 +26,7 @@ export class UserService {
       where: { email },
     });
     if (!user) {
-      throw new NotFoundException('User does not exist');
+      throw new NotFoundException(USER_NOT_EXIST_ERROR);
     }
     delete user.password;
     return user;
@@ -35,7 +39,7 @@ export class UserService {
       where: { email: createUserDto.email },
     });
     if (user) {
-      throw new BadRequestException('User already exists');
+      throw new BadRequestException(USER_ALREADY_EXISTS_ERROR);
     }
     await this.userRepository.save(createUserDto);
     delete createUserDto.password;
@@ -45,6 +49,9 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { email: loginUserDto.email },
     });
+    if (!user) {
+      throw new BadRequestException(USER_NOT_EXIST_ERROR);
+    }
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Incorrect user credentials');
