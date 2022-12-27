@@ -32,6 +32,7 @@ export class DictionaryService {
         user,
         id: dictionaryId,
       },
+      relations: ['words'],
     });
     if (!dict) {
       throw new NotFoundException('Dictionary not found');

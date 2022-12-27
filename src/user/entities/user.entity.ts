@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Dictionary } from '../../dictionary/entity/dictionary.entity';
+import { Word } from '../../word/entities/word.entity';
 
 @Entity()
 export class User {
@@ -19,4 +20,7 @@ export class User {
     cascade: true,
   })
   dictionaries: Dictionary[];
+
+  @OneToMany(() => Word, (word) => word.user)
+  words: Word[];
 }

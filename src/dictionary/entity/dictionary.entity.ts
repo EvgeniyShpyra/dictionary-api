@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Word } from '../../word/entities/word.entity';
 
 @Entity()
 export class Dictionary {
@@ -20,4 +22,7 @@ export class Dictionary {
   @ManyToOne(() => User, (user) => user.dictionaries)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
+
+  @OneToMany(() => Word, (word) => word.dictionary)
+  words: Word[];
 }

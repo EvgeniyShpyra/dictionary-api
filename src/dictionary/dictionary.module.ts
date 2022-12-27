@@ -8,5 +8,6 @@ import { Dictionary } from './entity/dictionary.entity';
   imports: [TypeOrmModule.forFeature([Dictionary])],
   providers: [DictionaryService],
   controllers: [DictionaryController],
+  exports: [DictionaryService],
 })
 export class DictionaryModule {}
