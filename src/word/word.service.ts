@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Word } from './entities/word.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CreateWordDto } from './dto/create-word.dto';
 import { User } from '../user/entities/user.entity';
 import { DictionaryService } from '../dictionary/dictionary.service';
@@ -58,11 +58,11 @@ export class WordService {
     await this.wordRepository.delete(word);
     return { success: true };
   }
-  async searchWord(term: string, user: User) {
+  async searchWord(therm: string, user: User) {
     const word = await this.wordRepository.findOne({
       where: [
-        { name: term, user },
-        { translation: term, user },
+        { name: ILike(`${therm}`), user },
+        { translation: ILike(`${therm}`), user },
       ],
     });
     if (!word) {

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { WordService } from './word.service';
@@ -55,5 +56,10 @@ export class WordController {
   @Delete('/:id')
   deleteWord(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
     return this.wordService.deleteWord(id, user);
+  }
+
+  @Get('/')
+  searchWord(@Query('therm') therm: string, user: User) {
+    return this.wordService.searchWord(therm, user);
   }
 }
