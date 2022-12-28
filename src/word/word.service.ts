@@ -2,10 +2,11 @@ import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Word } from './entities/word.entity';
 import { Repository } from 'typeorm';
-import { CreateWordDto } from './dto/createWordDto';
+import { CreateWordDto } from './dto/create-word.dto';
 import { User } from '../user/entities/user.entity';
 import { DictionaryService } from '../dictionary/dictionary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateWordDto } from './dto/update-word.dto';
 
 @Injectable()
 @UseGuards(JwtAuthGuard)
@@ -48,11 +49,42 @@ export class WordService {
     delete word.user;
     return word;
   }
-  updateWord() {}
-  deleteWord() {}
-  searchWord() {}
+  async updateWord(wordId: number, updateWordDto: UpdateWordDto, user: User) {
+    const word = await this.findWord(wordId, user);
+    return this.wordRepository.save({ ...word, ...updateWordDto });
+  }
+  async deleteWord(wordId: number, user: User) {
+    const word = await this.findWord(wordId, user);
+    await this.wordRepository.delete(word);
+    return { success: true };
+  }
+  async searchWord(term: string, user: User) {
+    const word = await this.wordRepository.findOne({
+      where: [
+        { name: term, user },
+        { translation: term, user },
+      ],
+    });
+    if (!word) {
+      throw new BadRequestException('No such word');
+    }
+    return word;
+  }
 
   private async findDictionary(dictionaryId, user: User) {
     return this.dictionaryService.findOneDictionary(dictionaryId, user);
+  }
+
+  private async findWord(wordId: number, user: User) {
+    const word = await this.wordRepository.findOne({
+      where: {
+        id: wordId,
+        user,
+      },
+    });
+    if (!word) {
+      throw new BadRequestException('No such word');
+    }
+    return word;
   }
 }

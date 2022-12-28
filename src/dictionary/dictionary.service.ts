@@ -23,6 +23,7 @@ export class DictionaryService {
   async getAllDictionaries(user: User) {
     return this.dictionaryRepository.find({
       where: { user },
+      relations: ['words'],
     });
   }
 

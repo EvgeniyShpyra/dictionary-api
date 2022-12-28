@@ -1,4 +1,3 @@
-import { Dictionary } from '../../dictionary/entity/dictionary.entity';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateWordDto {
@@ -9,6 +8,7 @@ export class CreateWordDto {
   @IsOptional()
   @IsBoolean()
   isLearned?: boolean;
+  @IsOptional()
   @IsNumber()
-  dictionary: number;
+  dictionary?: number;
 }
