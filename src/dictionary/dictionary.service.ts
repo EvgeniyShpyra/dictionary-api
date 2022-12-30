@@ -21,10 +21,18 @@ export class DictionaryService {
   }
 
   async getAllDictionaries(user: User) {
-    return this.dictionaryRepository.find({
-      where: { user },
-      relations: ['words'],
-    });
+    return this.dictionaryRepository
+      .find({
+        where: { user },
+        relations: ['words'],
+      })
+      .then((dict) =>
+        dict.map((item) => ({
+          item,
+          count: item.words.length,
+          learned: item.words.filter((word) => word.isLearned).length,
+        })),
+      );
   }
 
   async findOneDictionary(dictionaryId: number, user: User) {
@@ -61,5 +69,14 @@ export class DictionaryService {
     const dict = await this.findOneDictionary(dictionaryId, user);
     dict.isPublic = !dict.isPublic;
     return this.dictionaryRepository.save(dict);
+  }
+
+  async getAllPublicDictionaries() {
+    return this.dictionaryRepository.find({
+      where: {
+        isPublic: true,
+      },
+      relations: ['words'],
+    });
   }
 }

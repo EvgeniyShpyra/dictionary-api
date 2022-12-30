@@ -35,6 +35,11 @@ export class DictionaryController {
     return this.dictionaryService.getAllDictionaries(user);
   }
 
+  @Get('/public')
+  getAllPublicDictionaries() {
+    return this.dictionaryService.getAllPublicDictionaries();
+  }
+
   @Get('/:id')
   findOneDictionary(
     @Param('id', ParseIntPipe) id: number,
