@@ -36,8 +36,8 @@ export class DictionaryController {
   }
 
   @Get('/public')
-  getAllPublicDictionaries() {
-    return this.dictionaryService.getAllPublicDictionaries();
+  getAllPublicDictionaries(@GetUser() user: User) {
+    return this.dictionaryService.getAllPublicDictionaries(user);
   }
 
   @Get('/:id')

@@ -28,7 +28,7 @@ export class WordController {
     @Body() createWordDto: CreateWordDto,
     @GetUser() user: User,
   ) {
-    return this.wordService.createWord(createWordDto, user);
+    return this.wordService.createWord(dictionaryId, createWordDto, user);
   }
 
   @Get('/:id')
@@ -42,6 +42,14 @@ export class WordController {
     @GetUser() user: User,
   ) {
     return this.wordService.getAllWords(dictionaryId, user);
+  }
+
+  @Get('/copy/:dictionaryId')
+  copyDictionary(
+    @Param('dictionaryId', ParseIntPipe) dictionaryId: number,
+    @GetUser() user: User,
+  ) {
+    return this.wordService.copyDictionary(dictionaryId, user);
   }
 
   @Patch('/:id')

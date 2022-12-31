@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dictionary } from './entity/dictionary.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { DictionaryDto } from './dto/dictionary.dto';
 import { User } from '../user/entities/user.entity';
+import { DICTIONARY_NOT_FOUND } from './dictionary.constants';
 
 @Injectable()
 export class DictionaryService {
@@ -21,30 +22,22 @@ export class DictionaryService {
   }
 
   async getAllDictionaries(user: User) {
-    return this.dictionaryRepository
-      .find({
-        where: { user },
-        relations: ['words'],
-      })
-      .then((dict) =>
-        dict.map((item) => ({
-          item,
-          count: item.words.length,
-          learned: item.words.filter((word) => word.isLearned).length,
-        })),
-      );
+    return this.dictionaryRepository.find({
+      where: { user },
+      relations: ['words'],
+    });
   }
 
   async findOneDictionary(dictionaryId: number, user: User) {
     const dict = await this.dictionaryRepository.findOne({
       where: {
-        user,
         id: dictionaryId,
+        user,
       },
       relations: ['words'],
     });
     if (!dict) {
-      throw new NotFoundException('Dictionary not found');
+      throw new NotFoundException(DICTIONARY_NOT_FOUND);
     }
     return dict;
   }
@@ -61,7 +54,7 @@ export class DictionaryService {
 
   async deleteDictionary(dictionaryId: number, user: User) {
     const dict = await this.findOneDictionary(dictionaryId, user);
-    await this.dictionaryRepository.delete(dict);
+    await this.dictionaryRepository.remove(dict);
     return { success: true };
   }
 
@@ -71,12 +64,27 @@ export class DictionaryService {
     return this.dictionaryRepository.save(dict);
   }
 
-  async getAllPublicDictionaries() {
+  async getAllPublicDictionaries(user: User) {
     return this.dictionaryRepository.find({
       where: {
         isPublic: true,
+        user: Not(user.id),
       },
       relations: ['words'],
     });
+  }
+
+  async findPublicDictionary(dictionaryId) {
+    const dict = await this.dictionaryRepository.findOne({
+      where: {
+        isPublic: true,
+        id: dictionaryId,
+      },
+      relations: ['words'],
+    });
+    if (!dict) {
+      throw new NotFoundException(DICTIONARY_NOT_FOUND);
+    }
+    return dict;
   }
 }

@@ -25,6 +25,7 @@ export class WordService {
       },
     });
   }
+
   async getWord(wordId: number, user: User) {
     const word = await this.wordRepository.findOne({
       where: { id: wordId, user },
@@ -35,29 +36,35 @@ export class WordService {
     }
     return word;
   }
-  async createWord(createWordDto: CreateWordDto, user: User) {
-    const dictionary = await this.findDictionary(
-      createWordDto.dictionary,
-      user,
-    );
+
+  async createWord(
+    dictionaryId: number,
+    createWordDto: CreateWordDto,
+    user: User,
+  ) {
+    const dictionary = await this.findDictionary(dictionaryId, user);
     const word = await this.wordRepository.save({
       name: createWordDto.name,
       translation: createWordDto.translation,
       dictionary,
       user,
     });
+    delete word.dictionary;
     delete word.user;
     return word;
   }
+
   async updateWord(wordId: number, updateWordDto: UpdateWordDto, user: User) {
     const word = await this.findWord(wordId, user);
     return this.wordRepository.save({ ...word, ...updateWordDto });
   }
+
   async deleteWord(wordId: number, user: User) {
     const word = await this.findWord(wordId, user);
     await this.wordRepository.delete(word);
     return { success: true };
   }
+
   async searchWord(therm: string, user: User) {
     const word = await this.wordRepository.findOne({
       where: [
@@ -69,6 +76,27 @@ export class WordService {
       throw new BadRequestException('No such word');
     }
     return word;
+  }
+
+  async copyDictionary(dictionaryId: number, user: User) {
+    const dict = await this.dictionaryService.findPublicDictionary(
+      dictionaryId,
+    );
+    const newDict = await this.dictionaryService.createDictionary(
+      {
+        name: dict.name,
+      },
+      user,
+    );
+    const words = dict.words.map((word) =>
+      this.wordRepository.create({
+        name: word.name,
+        translation: word.translation,
+        dictionary: newDict,
+        user,
+      }),
+    );
+    return this.wordRepository.save(words);
   }
 
   private async findDictionary(dictionaryId, user: User) {
