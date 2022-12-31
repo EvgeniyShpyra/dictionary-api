@@ -45,6 +45,18 @@ export class UserService {
     delete createUserDto.password;
     return createUserDto;
   }
+
+  async deleteUser(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new BadRequestException(USER_NOT_EXIST_ERROR);
+    }
+    await this.userRepository.remove(user);
+    return { success: true };
+  }
+
   async validateUser(loginUserDto: LoginUserDto) {
     const user = await this.userRepository.findOne({
       where: { email: loginUserDto.email },
