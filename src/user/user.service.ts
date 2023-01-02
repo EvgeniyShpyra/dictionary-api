@@ -45,13 +45,15 @@ export class UserService {
   }
 
   async deleteUser(userId: number) {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
-    if (!user) {
-      throw new BadRequestException(USER_NOT_EXIST_ERROR);
-    }
+    const user = await this.findUserById(userId);
     await this.userRepository.remove(user);
+    return { success: true };
+  }
+
+  async userStatus(userId: number) {
+    const user = await this.findUserById(userId);
+    user.isConfirmed = !user.isConfirmed;
+    await this.userRepository.save(user);
     return { success: true };
   }
 
@@ -68,6 +70,16 @@ export class UserService {
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Incorrect user credentials');
+    }
+    return user;
+  }
+
+  private async findUserById(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new BadRequestException(USER_NOT_EXIST_ERROR);
     }
     return user;
   }

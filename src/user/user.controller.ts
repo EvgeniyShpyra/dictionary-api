@@ -21,6 +21,11 @@ export class UserController {
     return this.userService.findUser(user.email);
   }
 
+  @Get('/userstatus/:id')
+  changeUser(@Param('id', ParseIntPipe) userId: number) {
+    return this.userService.userStatus(userId);
+  }
+
   @Delete('/:id')
   deleteUser(@Param('id', ParseIntPipe) userId: number) {
     return this.userService.deleteUser(userId);
