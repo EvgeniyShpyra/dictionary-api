@@ -22,10 +22,16 @@ export class DictionaryService {
   }
 
   async getAllDictionaries(user: User) {
-    return this.dictionaryRepository.find({
+    const dict = await this.dictionaryRepository.find({
       where: { user },
       relations: ['words'],
     });
+
+    return dict.map((dictionary) => ({
+      ...dictionary,
+      learned: dictionary.words.filter((word) => word.isLearned).length,
+      total: dictionary.words.length,
+    }));
   }
 
   async findOneDictionary(dictionaryId: number, user: User) {
@@ -39,6 +45,7 @@ export class DictionaryService {
     if (!dict) {
       throw new NotFoundException(DICTIONARY_NOT_FOUND);
     }
+
     return dict;
   }
 
