@@ -28,7 +28,6 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(USER_NOT_EXIST_ERROR);
     }
-    delete user.password;
     return user;
   }
 
@@ -42,7 +41,6 @@ export class UserService {
       throw new BadRequestException(USER_ALREADY_EXISTS_ERROR);
     }
     await this.userRepository.save(createUserDto);
-    delete createUserDto.password;
     return createUserDto;
   }
 
@@ -58,9 +56,12 @@ export class UserService {
   }
 
   async validateUser(loginUserDto: LoginUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: loginUserDto.email },
-    });
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.email =:email', { email: loginUserDto.email })
+      .addSelect('user.password')
+      .getOne();
+
     if (!user) {
       throw new BadRequestException(USER_NOT_EXIST_ERROR);
     }
