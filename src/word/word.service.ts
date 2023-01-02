@@ -16,14 +16,29 @@ export class WordService {
     private dictionaryService: DictionaryService,
   ) {}
 
-  async getAllWords(dictionaryId: number, user: User) {
+  async getAllWords(
+    dictionaryId: number,
+    user: User,
+    page: number,
+    limit: number,
+  ) {
+    const skip = (page - 1) * limit;
     const dictionary = await this.findDictionary(dictionaryId, user);
-    return this.wordRepository.find({
+    const [words, count] = await this.wordRepository.findAndCount({
       where: {
         dictionary,
         user,
       },
+      skip,
+      take: limit,
     });
+    return {
+      ...words,
+      count,
+      page,
+      limit,
+      pages: Math.ceil(count / limit),
+    };
   }
 
   async getWord(wordId: number, user: User) {

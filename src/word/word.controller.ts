@@ -40,8 +40,10 @@ export class WordController {
   getAllWords(
     @Param('id', ParseIntPipe) dictionaryId: number,
     @GetUser() user: User,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ) {
-    return this.wordService.getAllWords(dictionaryId, user);
+    return this.wordService.getAllWords(dictionaryId, user, page, limit);
   }
 
   @Get('/copy/:dictionaryId')
