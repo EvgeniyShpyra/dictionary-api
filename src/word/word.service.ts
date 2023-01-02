@@ -33,7 +33,7 @@ export class WordService {
       take: limit,
     });
     return {
-      ...words,
+      words,
       count,
       page,
       limit,
