@@ -17,11 +17,11 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('dictionary')
 export class DictionaryController {
   constructor(private readonly dictionaryService: DictionaryService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   createDictionary(
     @Body() dictionaryDto: DictionaryDto,
@@ -30,16 +30,18 @@ export class DictionaryController {
     return this.dictionaryService.createDictionary(dictionaryDto, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/')
   getAllDictionaries(@GetUser() user: User) {
     return this.dictionaryService.getAllDictionaries(user);
   }
 
   @Get('/public')
-  getAllPublicDictionaries(@GetUser() user: User) {
-    return this.dictionaryService.getAllPublicDictionaries(user);
+  getAllPublicDictionaries() {
+    return this.dictionaryService.getAllPublicDictionaries();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   findOneDictionary(
     @Param('id', ParseIntPipe) id: number,
@@ -48,6 +50,7 @@ export class DictionaryController {
     return this.dictionaryService.findOneDictionary(id, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('/:id')
   updateDictionary(
     @Param('id', ParseIntPipe) id: number,
@@ -61,6 +64,7 @@ export class DictionaryController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
   deleteDictionary(
@@ -70,6 +74,7 @@ export class DictionaryController {
     return this.dictionaryService.deleteDictionary(id, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('/:id/status')
   changePrivacy(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
     return this.dictionaryService.changePrivacy(id, user);
