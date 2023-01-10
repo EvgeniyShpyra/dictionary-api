@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     WordModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'development' ? '.env' : null,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

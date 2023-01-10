@@ -17,7 +17,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT;
   await app.listen(PORT);
   logger.debug(`Server started on port ${PORT}`);
 }

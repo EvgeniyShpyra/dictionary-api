@@ -10,7 +10,7 @@ export function getTypeOrmConfig(
     port: +configService.get<number>('DB_PORT') || 5432,
     username: configService.get('DB_USERNAME') || 'postgres',
     password: configService.get('DB_PASSWORD') || 'password',
-    // database: configService.get('DB_NAME') || 'dictionary',
+    database: configService.get('DB_NAME') || 'postgres',
     autoLoadEntities: true,
     synchronize: true,
   };

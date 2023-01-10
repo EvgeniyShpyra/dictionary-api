@@ -4,7 +4,7 @@ services:
   api:
     build: .
     restart: unless-stopped
-    command: npm run start:dev
+    command: npm run start
     container_name: api
     depends_on:
       - db
