@@ -8,7 +8,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
   app.enableCors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://dictionary-ashy.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   });
   app.useGlobalPipes(
