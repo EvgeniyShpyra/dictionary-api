@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dictionary } from './entity/dictionary.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { DictionaryDto } from './dto/dictionary.dto';
 import { User } from '../user/entities/user.entity';
 import { DICTIONARY_NOT_FOUND } from './dictionary.constants';
@@ -74,9 +74,7 @@ export class DictionaryService {
 
   async getAllPublicDictionaries() {
     return this.dictionaryRepository.find({
-      where: {
-        isPublic: true,
-      },
+      where: [{ isPublic: true }, { words: MoreThan(0) }],
       relations: ['words'],
     });
   }
