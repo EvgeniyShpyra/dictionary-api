@@ -16,6 +16,7 @@ export class DictionaryService {
   async createDictionary(dictionaryDto: DictionaryDto, user: User) {
     const dictionary = this.dictionaryRepository.create({
       name: dictionaryDto.name,
+      isPublic: dictionaryDto.isPublic,
       user,
     });
     return this.dictionaryRepository.save(dictionary);
