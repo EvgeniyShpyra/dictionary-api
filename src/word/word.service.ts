@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UseGuards,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Word } from './entities/word.entity';
 import { ILike, Repository } from 'typeorm';
@@ -7,6 +12,8 @@ import { User } from '../user/entities/user.entity';
 import { DictionaryService } from '../dictionary/dictionary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateWordDto } from './dto/update-word.dto';
+import { CreateWordsDto } from './dto/create-words.dto';
+import { DictionaryDto } from '../dictionary/dto/dictionary.dto';
 
 @Injectable()
 @UseGuards(JwtAuthGuard)
@@ -67,6 +74,31 @@ export class WordService {
     delete word.dictionary;
     delete word.user;
     return word;
+  }
+
+  // Create dictionary with words
+  async createDictionaryWithWords(createWordsDto: CreateWordsDto, user: User) {
+    try {
+      const dict: DictionaryDto = {
+        name: createWordsDto.dictionaryName,
+        isPublic: createWordsDto.isPublic,
+      };
+      const dictionary = await this.dictionaryService.createDictionary(
+        dict,
+        user,
+      );
+      const words = createWordsDto.words.map((word) =>
+        this.wordRepository.create({
+          name: word.name,
+          translation: word.translation,
+          dictionary,
+          user,
+        }),
+      );
+      return this.wordRepository.save(words);
+    } catch (e) {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
   async updateWord(wordId: number, updateWordDto: UpdateWordDto, user: User) {

@@ -16,6 +16,7 @@ import { User } from '../user/entities/user.entity';
 import { CreateWordDto } from './dto/create-word.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateWordDto } from './dto/update-word.dto';
+import { CreateWordsDto } from './dto/create-words.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('word')
@@ -44,6 +45,14 @@ export class WordController {
     @Query('limit', ParseIntPipe) limit: number,
   ) {
     return this.wordService.getAllWords(dictionaryId, user, page, limit);
+  }
+
+  @Post('/dictionary')
+  createDictionaryWithWords(
+    @Body() createWordsDto: CreateWordsDto,
+    @GetUser() user: User,
+  ) {
+    return this.wordService.createDictionaryWithWords(createWordsDto, user);
   }
 
   @Get('/copy/:dictionaryId')
