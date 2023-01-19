@@ -15,18 +15,30 @@ export class AuthService {
   async signUp(signUpUserDto: SignupUserDto) {
     const salt = await genSalt(10);
     const hashedPassword = await hash(signUpUserDto.password, salt);
-    return this.userService.createUser({
+
+    const user = await this.userService.createUser({
       ...signUpUserDto,
       password: hashedPassword,
     });
+    delete user.password;
+    delete user.isConfirmed;
+    return {
+      access_token: await this.signPassword({ email: signUpUserDto.email }),
+      ...user,
+    };
   }
   async login(loginUserDto: LoginUserDto) {
     const user = await this.userService.validateUser(loginUserDto);
     const payload = { email: user.email };
     delete user.password;
+    delete user.isConfirmed;
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.signPassword(payload),
       ...user,
     };
+  }
+
+  private async signPassword(payload: { email: string }) {
+    return this.jwtService.signAsync(payload);
   }
 }

@@ -5,7 +5,7 @@ export class SignupUserDto {
   username: string;
   @IsEmail()
   email: string;
-  @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm, {
+  @Matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{5,})\S$/, {
     message: 'Password is too weak',
   })
   @IsString()

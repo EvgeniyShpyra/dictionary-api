@@ -31,17 +31,15 @@ export class UserService {
     return user;
   }
 
-  async createUser(
-    createUserDto: CreateUserDto,
-  ): Promise<Omit<CreateUserDto, 'password'>> {
+  async createUser(createUserDto: CreateUserDto) {
     const user = await this.userRepository.findOne({
       where: { email: createUserDto.email },
+      select: ['username', 'createdAt', 'email', 'id'],
     });
     if (user) {
       throw new BadRequestException(USER_ALREADY_EXISTS_ERROR);
     }
-    await this.userRepository.save(createUserDto);
-    return createUserDto;
+    return this.userRepository.save(createUserDto);
   }
 
   async deleteUser(userId: number) {
