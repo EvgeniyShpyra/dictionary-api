@@ -75,7 +75,8 @@ export class DictionaryService {
   async getAllPublicDictionaries() {
     return this.dictionaryRepository.find({
       where: [{ isPublic: true }, { words: MoreThan(0) }],
-      relations: ['words'],
+      select: ['id', 'name', 'createdAt'],
+      // relations: ['words'],
     });
   }
 
