@@ -33,7 +33,9 @@ export class WordService {
     const dictionary = await this.findDictionary(dictionaryId, user);
     const [words, count] = await this.wordRepository.findAndCount({
       where: {
-        dictionary,
+        dictionary: {
+          id: dictionary.id,
+        },
         user,
       },
       skip,
@@ -51,7 +53,6 @@ export class WordService {
   async getWord(wordId: number, user: User) {
     const word = await this.wordRepository.findOne({
       where: { id: wordId, user },
-      relations: ['dictionary'],
     });
     if (!word) {
       throw new BadRequestException('No such word');
@@ -115,8 +116,8 @@ export class WordService {
   async searchWord(therm: string, user: User) {
     const word = await this.wordRepository.findOne({
       where: [
-        { name: ILike(`${therm}`), user },
-        { translation: ILike(`${therm}`), user },
+        { name: ILike(`%${therm}%`), user },
+        { translation: ILike(`%${therm}%`), user },
       ],
     });
     if (!word) {
