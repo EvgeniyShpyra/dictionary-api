@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { DictionaryDto } from './dto/dictionary.dto';
@@ -37,8 +38,11 @@ export class DictionaryController {
   }
 
   @Get('/public')
-  getAllPublicDictionaries() {
-    return this.dictionaryService.getAllPublicDictionaries();
+  getAllPublicDictionaries(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.dictionaryService.getAllPublicDictionaries(page, limit);
   }
 
   @UseGuards(JwtAuthGuard)
