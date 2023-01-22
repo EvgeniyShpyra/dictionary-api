@@ -20,7 +20,7 @@ export class Dictionary {
   name: string;
   @CreateDateColumn()
   createdAt: string;
-  @UpdateDateColumn({ default: () => 'now()' })
+  @UpdateDateColumn()
   updatedAt: Date;
   @Column({ default: false })
   isPublic: boolean;

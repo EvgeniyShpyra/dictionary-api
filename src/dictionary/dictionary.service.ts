@@ -25,6 +25,7 @@ export class DictionaryService {
   async getAllDictionaries(user: User) {
     return this.dictionaryRepository.find({
       where: { user },
+      order: { updatedAt: 'DESC' },
       // relations: ['words'],
     });
   }
@@ -72,6 +73,9 @@ export class DictionaryService {
       where: [{ isPublic: true }, { words: MoreThan(0) }],
       skip,
       take: limit,
+      order: {
+        updatedAt: 'DESC',
+      },
     });
     return {
       dictionaries,

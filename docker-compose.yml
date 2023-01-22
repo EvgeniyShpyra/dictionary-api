@@ -9,6 +9,8 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
+      TZ: "Europe/Kyiv"
+      PGTZ: "Europe/Kyiv"
 #      POSTGRES_DB: dictionary
     volumes:
       - db_data:/var/lib/postgresql/data
