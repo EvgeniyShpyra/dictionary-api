@@ -19,7 +19,10 @@ export class DictionaryService {
       isPublic: dictionaryDto.isPublic,
       user,
     });
-    return this.dictionaryRepository.save(dictionary);
+
+    await this.dictionaryRepository.save(dictionary);
+    delete dictionary.user;
+    return dictionary;
   }
 
   async getAllDictionaries(user: User) {

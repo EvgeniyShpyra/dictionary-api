@@ -96,7 +96,10 @@ export class WordService {
           user,
         }),
       );
-      return this.wordRepository.save(words);
+
+      await this.wordRepository.save(words);
+      delete dictionary.user;
+      return dictionary;
     } catch (e) {
       throw new InternalServerErrorException('Something went wrong');
     }
