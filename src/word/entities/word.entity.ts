@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Dictionary } from '../../dictionary/entity/dictionary.entity';
 import { User } from '../../user/entities/user.entity';
@@ -18,8 +20,10 @@ export class Word {
   translation: string;
   @Column({ default: false })
   isLearned: boolean;
-  @Column({ default: Date.now() })
-  createdAt?: string;
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
   @ManyToOne(() => Dictionary, (dictionary) => dictionary.words, {
     cascade: true,
     onDelete: 'CASCADE',

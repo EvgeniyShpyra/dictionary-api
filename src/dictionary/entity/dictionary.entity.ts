@@ -19,7 +19,7 @@ export class Dictionary {
   @Column()
   name: string;
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
   @UpdateDateColumn()
   updatedAt: Date;
   @Column({ default: false })
