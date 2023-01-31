@@ -98,8 +98,7 @@ export class WordService {
       );
 
       await this.wordRepository.save(words);
-      delete dictionary.user;
-      return dictionary;
+      return this.dictionaryService.getOnlyDictionary(dictionary.id);
     } catch (e) {
       throw new InternalServerErrorException('Something went wrong');
     }

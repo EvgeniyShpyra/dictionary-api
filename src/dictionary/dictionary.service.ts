@@ -21,8 +21,7 @@ export class DictionaryService {
     });
 
     await this.dictionaryRepository.save(dictionary);
-    delete dictionary.user;
-    return dictionary;
+    return this.getOnlyDictionary(dictionary.id);
   }
 
   async getAllDictionaries(user: User) {
@@ -46,6 +45,14 @@ export class DictionaryService {
     }
 
     return dict;
+  }
+
+  async getOnlyDictionary(dictionaryId: number) {
+    return this.dictionaryRepository.findOne({
+      where: {
+        id: dictionaryId,
+      },
+    });
   }
 
   async updateSingleDictionary(
