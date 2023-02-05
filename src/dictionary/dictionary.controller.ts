@@ -17,6 +17,7 @@ import { DictionaryService } from './dictionary.service';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtOpenGuard } from '../auth/guards/jwt-open.guard';
 
 @Controller('dictionary')
 export class DictionaryController {
@@ -37,12 +38,14 @@ export class DictionaryController {
     return this.dictionaryService.getAllDictionaries(user);
   }
 
+  @UseGuards(JwtOpenGuard)
   @Get('/public')
   getAllPublicDictionaries(
+    @GetUser() user: User,
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ) {
-    return this.dictionaryService.getAllPublicDictionaries(page, limit);
+    return this.dictionaryService.getAllPublicDictionaries(page, limit, user);
   }
 
   @UseGuards(JwtAuthGuard)

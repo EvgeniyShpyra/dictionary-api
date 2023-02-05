@@ -55,6 +55,10 @@ export class UserService {
     return { success: true };
   }
 
+  async getAllUsers() {
+    return this.userRepository.createQueryBuilder('user').getMany();
+  }
+
   async validateUser(loginUserDto: LoginUserDto) {
     const user = await this.userRepository
       .createQueryBuilder('user')

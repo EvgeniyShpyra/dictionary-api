@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dictionary } from './entity/dictionary.entity';
-import { MoreThan, Repository } from 'typeorm';
+import { MoreThan, Not, Repository } from 'typeorm';
 import { DictionaryDto } from './dto/dictionary.dto';
 import { User } from '../user/entities/user.entity';
 import { DICTIONARY_NOT_FOUND } from './dictionary.constants';
@@ -77,10 +77,13 @@ export class DictionaryService {
     return this.dictionaryRepository.save(dict);
   }
 
-  async getAllPublicDictionaries(page: number, limit: number) {
+  async getAllPublicDictionaries(page: number, limit: number, user?: User) {
     const skip = (page - 1) * limit;
     const [dictionaries, count] = await this.dictionaryRepository.findAndCount({
-      where: [{ isPublic: true }, { words: MoreThan(0) }],
+      where: [
+        { isPublic: true, ...(user && { user: { id: Not(user.id) } }) },
+        { words: MoreThan(0) },
+      ],
       skip,
       take: limit,
       order: {

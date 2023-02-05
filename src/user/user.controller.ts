@@ -15,6 +15,11 @@ import { User } from './entities/user.entity';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('/')
+  getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/userinfo')
   getUser(@GetUser() user: User) {
