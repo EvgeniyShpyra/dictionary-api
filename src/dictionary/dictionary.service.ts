@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dictionary } from './entity/dictionary.entity';
-import { MoreThan, Not, Repository } from 'typeorm';
+import { ILike, MoreThan, Not, Repository } from 'typeorm';
 import { DictionaryDto } from './dto/dictionary.dto';
 import { User } from '../user/entities/user.entity';
 import { DICTIONARY_NOT_FOUND } from './dictionary.constants';
@@ -107,6 +107,21 @@ export class DictionaryService {
       },
       relations: ['words'],
     });
+    if (!dict) {
+      throw new NotFoundException(DICTIONARY_NOT_FOUND);
+    }
+    return dict;
+  }
+
+  async searchDictionary(therm: string, user?: User) {
+    const dict = await this.dictionaryRepository.find({
+      where: {
+        name: ILike(`%${therm}%`),
+        isPublic: true,
+        ...(user && { user: { id: Not(user.id) } }),
+      },
+    });
+
     if (!dict) {
       throw new NotFoundException(DICTIONARY_NOT_FOUND);
     }

@@ -143,7 +143,7 @@ export class WordService {
   }
 
   async searchWord(therm: string, user: User) {
-    const word = await this.wordRepository.findOne({
+    const word = await this.wordRepository.find({
       where: [
         { name: ILike(`%${therm}%`), user },
         { translation: ILike(`%${therm}%`), user },

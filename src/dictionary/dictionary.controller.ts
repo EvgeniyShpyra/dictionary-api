@@ -32,6 +32,12 @@ export class DictionaryController {
     return this.dictionaryService.createDictionary(dictionaryDto, user);
   }
 
+  @UseGuards(JwtOpenGuard)
+  @Get('/')
+  searchDictionary(@Query('therm') therm: string, @GetUser() user: User) {
+    return this.dictionaryService.searchDictionary(therm, user);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/')
   getAllDictionaries(@GetUser() user: User) {
