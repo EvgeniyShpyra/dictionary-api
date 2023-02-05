@@ -50,6 +50,33 @@ export class WordService {
     };
   }
 
+  async getAllWordsFromPublicDictionary(
+    dictionaryId: number,
+    page: number,
+    limit: number,
+  ) {
+    const skip = (page - 1) * limit;
+    const dictionary = await this.dictionaryService.findPublicDictionary(
+      dictionaryId,
+    );
+    const [words, count] = await this.wordRepository.findAndCount({
+      where: {
+        dictionary: {
+          id: dictionary.id,
+        },
+      },
+      skip,
+      take: limit,
+    });
+    return {
+      words,
+      count,
+      page,
+      limit,
+      pages: Math.ceil(count / limit),
+    };
+  }
+
   async getWord(wordId: number, user: User) {
     const word = await this.wordRepository.findOne({
       where: { id: wordId, user },
