@@ -21,7 +21,6 @@ export class AuthService {
       password: hashedPassword,
     });
     delete user.password;
-    delete user.isConfirmed;
     return {
       access_token: await this.signPassword({ email: signUpUserDto.email }),
       ...user,
@@ -31,7 +30,6 @@ export class AuthService {
     const user = await this.userService.validateUser(loginUserDto);
     const payload = { email: user.email };
     delete user.password;
-    delete user.isConfirmed;
     return {
       access_token: await this.signPassword(payload),
       ...user,

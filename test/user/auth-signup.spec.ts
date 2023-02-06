@@ -15,10 +15,6 @@ describe('Success sign up user', () => {
     expect(res.body).to.have.property('email').to.be.eq(payload.email);
     expect(res.body).to.have.property('id').to.be.a('number');
     expect(res.body).not.to.have.property('password');
-    expect(res.body)
-      .to.have.property('isConfirmed')
-      .to.be.a('boolean')
-      .to.be.eq(false);
   });
 
   afterAll(async () => {

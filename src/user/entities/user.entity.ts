@@ -12,8 +12,6 @@ export class User {
   email: string;
   @Column({ type: 'text', select: false })
   password: string;
-  @Column('boolean', { default: false })
-  isConfirmed: boolean;
   @Column({ nullable: true, default: Date.now(), name: 'created_at' })
   createdAt?: string;
   @OneToMany(() => Dictionary, (dictionary) => dictionary.user, {

@@ -48,13 +48,6 @@ export class UserService {
     return { success: true };
   }
 
-  async userStatus(userId: number) {
-    const user = await this.findUserById(userId);
-    user.isConfirmed = !user.isConfirmed;
-    await this.userRepository.save(user);
-    return { success: true };
-  }
-
   async getAllUsers() {
     return this.userRepository.createQueryBuilder('user').getMany();
   }
