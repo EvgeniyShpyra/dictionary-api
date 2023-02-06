@@ -113,11 +113,13 @@ export class DictionaryService {
     return dict;
   }
 
-  async searchDictionary(therm: string, user?: User) {
+  async searchDictionary(therm: string, user?: User, isPublic?: boolean) {
     const dict = await this.dictionaryRepository.find({
       where: {
         name: ILike(`%${therm}%`),
-        isPublic: true,
+        ...(isPublic && {
+          isPublic: isPublic,
+        }),
         ...(user && { user: { id: Not(user.id) } }),
       },
     });

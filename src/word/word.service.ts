@@ -106,6 +106,14 @@ export class WordService {
 
   // Create dictionary with words
   async createDictionaryWithWords(createWordsDto: CreateWordsDto, user: User) {
+    const existingDictionaries =
+      await this.dictionaryService.getAllDictionaries(user);
+    const exists = existingDictionaries.find((dict) =>
+      dict.name.includes(createWordsDto.dictionaryName),
+    );
+    if (exists) {
+      throw new BadRequestException('Such dictionary name already exists');
+    }
     try {
       const dict: DictionaryDto = {
         name: createWordsDto.dictionaryName,

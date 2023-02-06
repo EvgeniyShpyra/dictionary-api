@@ -41,7 +41,7 @@ export class DictionaryController {
   @UseGuards(JwtOpenGuard)
   @Get('/search')
   searchDictionary(@Query('therm') therm: string, @GetUser() user: User) {
-    return this.dictionaryService.searchDictionary(therm, user);
+    return this.dictionaryService.searchDictionary(therm, user, true);
   }
 
   @UseGuards(JwtOpenGuard)
