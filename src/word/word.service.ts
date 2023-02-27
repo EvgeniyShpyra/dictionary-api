@@ -146,7 +146,7 @@ export class WordService {
 
   async deleteWord(wordId: number, user: User) {
     const word = await this.findWord(wordId, user);
-    await this.wordRepository.delete(word);
+    await this.wordRepository.remove(word);
     return { success: true };
   }
 
