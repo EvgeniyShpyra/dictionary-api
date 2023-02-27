@@ -77,11 +77,20 @@ export class DictionaryService {
     return this.dictionaryRepository.save(dict);
   }
 
-  async getAllPublicDictionaries(page: number, limit: number, user?: User) {
+  async getAllPublicDictionaries(
+    page: number,
+    limit: number,
+    user?: User,
+    name?: string,
+  ) {
     const skip = (page - 1) * limit;
     const [dictionaries, count] = await this.dictionaryRepository.findAndCount({
       where: [
-        { isPublic: true, ...(user && { user: { id: Not(user.id) } }) },
+        {
+          isPublic: true,
+          ...(user && { user: { id: Not(user.id) } }),
+          ...(name && { name: ILike(`%${name}%`) }),
+        },
         { words: MoreThan(0) },
       ],
       skip,

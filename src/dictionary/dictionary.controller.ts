@@ -50,8 +50,14 @@ export class DictionaryController {
     @GetUser() user: User,
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
+    @Query('name') name: string,
   ) {
-    return this.dictionaryService.getAllPublicDictionaries(page, limit, user);
+    return this.dictionaryService.getAllPublicDictionaries(
+      page,
+      limit,
+      user,
+      name,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
