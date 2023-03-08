@@ -169,7 +169,7 @@ export class WordService {
     );
     const newDict = await this.dictionaryService.createDictionary(
       {
-        name: dict.name,
+        name: dict.name + '*',
       },
       user,
     );
